@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal_Hacker.exe</title>
+    <title>ATTENTION_PIRATAGE</title>
     <style>
+        /* Styles globaux */
         body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Courier New", Courier, monospace;
+            overflow-x: hidden;
+            background-color: black;
+            text-align: center;
+        }
+
+        /* --- ÉTAPE 1 : LE TERMINAL DE HACKING --- */
+        #hacker-screen {
             background-color: black;
             color: #00FF00;
-            font-family: "Courier New", Courier, monospace;
-            /* Padding dynamique qui s'adapte à la taille de l'écran */
-            padding: 5vw; 
-            /* Taille de police responsive : minimum 1rem, s'adapte à l'écran, maximum 1.5rem */
-            font-size: clamp(1rem, 4vw, 1.5rem); 
-            overflow-x: hidden;
-            margin: 0;
-            box-sizing: border-box;
+            padding: 5vw;
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            text-align: left;
+            min-height: 100vh;
         }
         #console {
-            /* Empêche les mots trop longs de dépasser sur mobile */
-            word-wrap: break-word; 
+            word-wrap: break-word;
         }
         p {
             margin: 0 0 10px 0;
@@ -33,38 +40,157 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
+
+        /* Le bouton de rançon (caché au début) */
+        #btn-rancon {
+            display: none;
+            margin-top: 30px;
+            background-color: red;
+            color: white;
+            border: 2px solid darkred;
+            padding: 15px 30px;
+            font-size: clamp(1.2rem, 5vw, 2rem);
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            animation: pulse 1s infinite;
+            width: 100%;
+            max-width: 400px;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- ÉTAPE 2 : LA PAGE DE RANÇON / ANNIVERSAIRE --- */
+        #birthday-screen {
+            display: none;
+            background-color: #ff0055;
+            color: white;
+            padding: 5vw;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hidden-at-start {
+            display: none !important;
+        }
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        h2 {
+            font-size: clamp(1.5rem, 6vw, 3rem);
+            color: #ffff00;
+            margin-top: 0;
+        }
+        .ransom-text {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            background: black;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 3px dashed yellow;
+        }
+        /* Conteneur vidéo responsive */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 560px;
+            aspect-ratio: 16 / 9;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
     </style>
 </head>
 <body>
-    <div id="console"></div>
-    <span class="cursor">_</span>
+
+    <div id="hacker-screen">
+        <div id="console"></div>
+        <span class="cursor" id="cursor">_</span>
+        <center>
+            <button id="btn-rancon" onclick="montrerRancon()">AFFICHER LA DEMANDE DE RANÇON</button>
+        </center>
+    </div>
+
+    <div id="birthday-screen" class="hidden-at-start">
+        <h1>Bonne znniverssaire Laëtitia !!!</h1>
+        <h2>41 ANS !</h2>
+        
+        <div class="ransom-text">
+            ⚠️ <strong>VOTRE SYSTÈME EST BLOQUÉ</strong> ⚠️<br><br>
+            Pour récupérer l'accès à vos données, une rançon est exigée immédiatement :<br>
+            <strong>1 énorme part de gâteau et faire la fête jusqu'au bout de la nuit !</strong> 🥳🥂
+        </div>
+
+        <div id="music-player" class="video-container"></div>
+    </div>
 
     <script>
+        // Textes du piratage
         const messages = [
-            "Initialisation du script de piratage...",
-            "Contournement du pare-feu principal...",
-            "Accès au système sécurisé...",
-            "Analyse des données en cours...",
-            "ATTENTION : Détection d'une activité anormale...",
-            "Téléchargement des recettes secrètes de grand-mère...",
-            "Piratage de la machine à café terminé à 100% ☕",
-            "Mission accomplie. Vous avez été hacké ! 😎"
+            "Lancement du protocole d'intrusion...",
+            "Contournement des pare-feux locaux...",
+            "Ciblage de la victime : LAËTITIA...",
+            "Scan biométrique : 41 ans détectés...",
+            "Analyse des dossiers compromettants...",
+            "Téléchargement des photos dossiers : 100%",
+            "ATTENTION : APPAREIL COMPROMIS !",
+            "Verrouillage du système en cours..."
         ];
 
         const consoleDiv = document.getElementById("console");
         let msgIndex = 0;
 
+        // Fonction pour écrire le texte façon Hacker
         function typeMessage() {
             if (msgIndex < messages.length) {
                 const p = document.createElement("p");
                 p.textContent = "> " + messages[msgIndex];
                 consoleDiv.appendChild(p);
                 msgIndex++;
-                setTimeout(typeMessage, 1500 + Math.random() * 1000); 
+                // Vitesse entre chaque ligne (plus rapide à la fin)
+                setTimeout(typeMessage, 800 + Math.random() * 800); 
+            } else {
+                // Quand c'est fini, on affiche le bouton
+                document.getElementById("btn-rancon").style.display = "inline-block";
+                document.getElementById("cursor").style.display = "none";
             }
         }
 
+        // On lance le piratage après 1 seconde
         setTimeout(typeMessage, 1000);
+
+        // Fonction quand on clique sur le bouton "RANÇON"
+        function montrerRancon() {
+            // Cacher l'écran de hack
+            document.getElementById("hacker-screen").style.display = "none";
+            
+            // Afficher l'écran d'anniversaire
+            const birthdayScreen = document.getElementById("birthday-screen");
+            birthdayScreen.classList.remove("hidden-at-start");
+            birthdayScreen.style.display = "flex";
+
+            // Lancer "Freed from desire" de Gala via YouTube
+            // L'ajout de ?autoplay=1 fonctionne ici car la personne a cliqué sur le bouton juste avant
+            const playerDiv = document.getElementById("music-player");
+            playerDiv.innerHTML = '<iframe src="https://www.youtube.com/embed/p3l7fgvrEKM?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+        }
     </script>
 </body>
 </html>
