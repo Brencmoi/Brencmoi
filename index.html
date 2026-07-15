@@ -9,9 +9,21 @@
             background-color: black;
             color: #00FF00;
             font-family: "Courier New", Courier, monospace;
-            padding: 20px;
-            font-size: 1.2rem;
-            overflow: hidden;
+            /* Padding dynamique qui s'adapte à la taille de l'écran */
+            padding: 5vw; 
+            /* Taille de police responsive : minimum 1rem, s'adapte à l'écran, maximum 1.5rem */
+            font-size: clamp(1rem, 4vw, 1.5rem); 
+            overflow-x: hidden;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        #console {
+            /* Empêche les mots trop longs de dépasser sur mobile */
+            word-wrap: break-word; 
+        }
+        p {
+            margin: 0 0 10px 0;
+            line-height: 1.4;
         }
         .cursor {
             animation: blink 1s infinite;
@@ -48,7 +60,7 @@
                 p.textContent = "> " + messages[msgIndex];
                 consoleDiv.appendChild(p);
                 msgIndex++;
-                setTimeout(typeMessage, 1500 + Math.random() * 1000); // Temps aléatoire entre chaque ligne pour faire plus "vrai"
+                setTimeout(typeMessage, 1500 + Math.random() * 1000); 
             }
         }
 
