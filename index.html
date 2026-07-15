@@ -41,7 +41,7 @@
             font-weight: bold;
         }
         .device-text {
-            color: #00FFFF; /* Cyan pour faire ressortir le modèle du téléphone */
+            color: #00FFFF; /* Cyan pour faire ressortir les infos */
             font-weight: bold;
         }
         @keyframes blink {
@@ -157,7 +157,6 @@
         } else if (/iPad/i.test(ua)) {
             appareil = "Apple iPad";
         } else if (/Android/i.test(ua)) {
-            // Tente de récupérer le modèle exact du téléphone Android s'il est dispo
             const match = ua.match(/Android.*?; (.*?) Build/i) || ua.match(/Android.*?; (.*?)\)/i);
             appareil = match ? match[1] + " (Android)" : "Smartphone Android";
         } else if (/Windows NT/i.test(ua)) {
@@ -166,36 +165,55 @@
             appareil = "Apple Mac";
         }
 
-        // --- 2. TEXTES DU PIRATAGE ---
-        const messages = [
-            "Lancement du protocole d'intrusion...",
-            "Contournement des pare-feux locaux...",
-            "Analyse de la connexion réseau...",
-            "Appareil détecté : <span class='device-text'>" + appareil + "</span>...",
-            "Ciblage de la victime : LAËTITIA...",
-            "Scan biométrique : 41 ans détectés...",
-            "Recherche de statut : En couple avec...",
-            "<span class='error-text'>[ ERREUR SYSTEME ]</span>",
-            "Analyse des dossiers compromettants...",
-            "Téléchargement des photos dossiers : 100%",
-            "ATTENTION : APPAREIL COMPROMIS !",
-            "Verrouillage du système en cours..."
-        ];
+        // --- 2. DÉTECTION DE L'OPÉRATEUR VIA API ---
+        let operateur = "Réseau crypté";
+        // On interroge discrètement un service en arrière-plan dès le chargement de la page
+        fetch('https://ipwho.is/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.connection && data.connection.isp) {
+                    operateur = data.connection.isp; // Ex: "Orange", "Societe Francaise Du Radiotelephone - SFR"
+                }
+            })
+            .catch(() => console.log("Erreur discrète"));
+
+        // --- 3. TEXTES DU PIRATAGE (Dynamiques) ---
+        // On utilise une fonction pour être sûr de récupérer le nom de l'opérateur 
+        // une fois que la recherche internet (qui prend une fraction de seconde) est terminée.
+        function getMessage(index) {
+            const messages = [
+                "Lancement du protocole d'intrusion...",
+                "Contournement des pare-feux locaux...",
+                "Interception des données chez : <span class='device-text'>[" + operateur + "]</span>...",
+                "Appareil ciblé : <span class='device-text'>[" + appareil + "]</span>...",
+                "Ciblage de la victime : LAËTITIA...",
+                "Scan biométrique : 41 ans détectés...",
+                "Recherche de statut : En couple avec...",
+                "<span class='error-text'>[ ERREUR SYSTEME ]</span>",
+                "Analyse des dossiers compromettants...",
+                "Téléchargement des photos dossiers : 100%",
+                "ATTENTION : APPAREIL COMPROMIS !",
+                "Verrouillage du système en cours..."
+            ];
+            return messages[index];
+        }
 
         const consoleDiv = document.getElementById("console");
         let msgIndex = 0;
+        const totalMessages = 12;
 
         function typeMessage() {
-            if (msgIndex < messages.length) {
+            if (msgIndex < totalMessages) {
                 const p = document.createElement("p");
-                p.innerHTML = "> " + messages[msgIndex];
+                p.innerHTML = "> " + getMessage(msgIndex);
                 consoleDiv.appendChild(p);
                 msgIndex++;
                 
-                // Timing : pause plus longue sur l'appareil et sur l'erreur
+                // Timing ajusté
                 let delay = 800 + Math.random() * 800;
-                if (msgIndex === 4) delay = 1500; // Pause après avoir affiché l'appareil
-                if (msgIndex === 8) delay = 2000; // Pause après l'erreur système
+                if (msgIndex === 3) delay = 1500; // Pause après l'opérateur
+                if (msgIndex === 4) delay = 1500; // Pause après l'appareil
+                if (msgIndex === 8) delay = 2000; // Pause après l'erreur
 
                 setTimeout(typeMessage, delay); 
             } else {
