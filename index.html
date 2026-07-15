@@ -120,7 +120,6 @@
 </head>
 <body>
 
-    <!-- Écran de piratage -->
     <div id="hacker-screen">
         <div id="console"></div>
         <span class="cursor" id="cursor">_</span>
@@ -129,7 +128,6 @@
         </center>
     </div>
 
-    <!-- Écran d'anniversaire -->
     <div id="birthday-screen" class="hidden-at-start">
         <h1>Bonne znniverssaire Laëtitia !!!</h1>
         <h2>41 ANS !</h2>
@@ -165,7 +163,7 @@
             appareil = "Apple Mac";
         }
 
-        // --- 2. DÉTECTION DE L'IP ET DE L'OPÉRATEUR VIA API ---
+        // --- 2. DÉTECTION DE L'IP ET DE L'OPÉRATEUR ---
         let operateur = "Réseau crypté";
         let adresseIP = "Analyse en cours...";
         
@@ -173,15 +171,24 @@
             .then(response => response.json())
             .then(data => {
                 if (data.ip) {
-                    adresseIP = data.ip; // Récupère l'adresse IP
+                    if (data.ip.includes(':')) {
+                        // Si c'est une IPv6 avec des lettres, on génère une fausse IPv4 classique pour le style
+                        adresseIP = "82." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255);
+                    } else {
+                        adresseIP = data.ip; // C'est une IP classique, on la garde
+                    }
                 }
                 if (data.connection && data.connection.isp) {
-                    operateur = data.connection.isp; // Récupère l'opérateur (SFR, Orange...)
+                    operateur = data.connection.isp; 
                 }
             })
-            .catch(() => console.log("Erreur discrète"));
+            .catch(() => {
+                // Si l'utilisateur a un bloqueur de pub, on invente des données réalistes
+                adresseIP = "192.168." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255);
+                operateur = "Réseau local sécurisé";
+            });
 
-        // --- 3. TEXTES DU PIRATAGE (Dynamiques) ---
+        // --- 3. TEXTES DU PIRATAGE ---
         function getMessage(index) {
             const messages = [
                 "Lancement du protocole d'intrusion...",
@@ -203,7 +210,7 @@
 
         const consoleDiv = document.getElementById("console");
         let msgIndex = 0;
-        const totalMessages = 13; // Il y a maintenant 13 lignes de texte
+        const totalMessages = 13;
 
         function typeMessage() {
             if (msgIndex < totalMessages) {
@@ -212,12 +219,11 @@
                 consoleDiv.appendChild(p);
                 msgIndex++;
                 
-                // Timing ajusté pour ménager le suspense sur les nouvelles lignes
                 let delay = 800 + Math.random() * 800;
-                if (msgIndex === 3) delay = 1200; // Pause après l'IP
-                if (msgIndex === 4) delay = 1500; // Pause après l'opérateur
-                if (msgIndex === 5) delay = 1500; // Pause après l'appareil
-                if (msgIndex === 9) delay = 2000; // Pause après l'erreur système
+                if (msgIndex === 3) delay = 1200; 
+                if (msgIndex === 4) delay = 1500; 
+                if (msgIndex === 5) delay = 1500; 
+                if (msgIndex === 9) delay = 2000; 
 
                 setTimeout(typeMessage, delay); 
             } else {
