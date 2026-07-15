@@ -165,25 +165,28 @@
             appareil = "Apple Mac";
         }
 
-        // --- 2. DÉTECTION DE L'OPÉRATEUR VIA API ---
+        // --- 2. DÉTECTION DE L'IP ET DE L'OPÉRATEUR VIA API ---
         let operateur = "Réseau crypté";
-        // On interroge discrètement un service en arrière-plan dès le chargement de la page
+        let adresseIP = "Analyse en cours...";
+        
         fetch('https://ipwho.is/')
             .then(response => response.json())
             .then(data => {
+                if (data.ip) {
+                    adresseIP = data.ip; // Récupère l'adresse IP
+                }
                 if (data.connection && data.connection.isp) {
-                    operateur = data.connection.isp; // Ex: "Orange", "Societe Francaise Du Radiotelephone - SFR"
+                    operateur = data.connection.isp; // Récupère l'opérateur (SFR, Orange...)
                 }
             })
             .catch(() => console.log("Erreur discrète"));
 
         // --- 3. TEXTES DU PIRATAGE (Dynamiques) ---
-        // On utilise une fonction pour être sûr de récupérer le nom de l'opérateur 
-        // une fois que la recherche internet (qui prend une fraction de seconde) est terminée.
         function getMessage(index) {
             const messages = [
                 "Lancement du protocole d'intrusion...",
                 "Contournement des pare-feux locaux...",
+                "Adresse IP repérée : <span class='device-text'>[" + adresseIP + "]</span>...",
                 "Interception des données chez : <span class='device-text'>[" + operateur + "]</span>...",
                 "Appareil ciblé : <span class='device-text'>[" + appareil + "]</span>...",
                 "Ciblage de la victime : LAËTITIA...",
@@ -200,7 +203,7 @@
 
         const consoleDiv = document.getElementById("console");
         let msgIndex = 0;
-        const totalMessages = 12;
+        const totalMessages = 13; // Il y a maintenant 13 lignes de texte
 
         function typeMessage() {
             if (msgIndex < totalMessages) {
@@ -209,11 +212,12 @@
                 consoleDiv.appendChild(p);
                 msgIndex++;
                 
-                // Timing ajusté
+                // Timing ajusté pour ménager le suspense sur les nouvelles lignes
                 let delay = 800 + Math.random() * 800;
-                if (msgIndex === 3) delay = 1500; // Pause après l'opérateur
-                if (msgIndex === 4) delay = 1500; // Pause après l'appareil
-                if (msgIndex === 8) delay = 2000; // Pause après l'erreur
+                if (msgIndex === 3) delay = 1200; // Pause après l'IP
+                if (msgIndex === 4) delay = 1500; // Pause après l'opérateur
+                if (msgIndex === 5) delay = 1500; // Pause après l'appareil
+                if (msgIndex === 9) delay = 2000; // Pause après l'erreur système
 
                 setTimeout(typeMessage, delay); 
             } else {
