@@ -36,6 +36,10 @@
             animation: blink 1s infinite;
             font-weight: bold;
         }
+        .error-text {
+            color: red;
+            font-weight: bold;
+        }
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -99,20 +103,12 @@
             margin-bottom: 30px;
             border: 3px dashed yellow;
         }
-        /* Conteneur vidéo responsive */
-        .video-container {
-            position: relative;
+        .gif-container {
             width: 100%;
-            max-width: 560px;
-            aspect-ratio: 16 / 9;
+            max-width: 500px;
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .gif-container img {
             width: 100%;
-            height: 100%;
-            border: none;
             border-radius: 10px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
@@ -120,6 +116,7 @@
 </head>
 <body>
 
+    <!-- Écran de piratage -->
     <div id="hacker-screen">
         <div id="console"></div>
         <span class="cursor" id="cursor">_</span>
@@ -128,17 +125,24 @@
         </center>
     </div>
 
+    <!-- Écran d'anniversaire (Caché au départ) -->
     <div id="birthday-screen" class="hidden-at-start">
-        <h1>Bonne Anniverssaire Laëtitia !!!</h1>
+        <h1>Bonne znniverssaire Laëtitia !!!</h1>
         <h2>41 ANS !</h2>
         
         <div class="ransom-text">
             ⚠️ <strong>VOTRE SYSTÈME EST BLOQUÉ</strong> ⚠️<br><br>
             Pour récupérer l'accès à vos données, une rançon est exigée immédiatement :<br>
-            <strong>1 cul sec !!!!!</strong> 🥳🥂
+            <strong>1 énorme part de gâteau et faire la fête jusqu'au bout de la nuit !</strong> 🥳🥂
         </div>
 
-        <div id="music-player" class="video-container"></div>
+        <!-- Lecteur audio caché pointant vers le fichier sur ton GitHub -->
+        <audio id="audio-player" src="musique.mp3" loop></audio>
+
+        <!-- Un GIF de fête pour remplacer la vidéo YouTube -->
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/3o7TKMt1VVNkHV2PaE/giphy.gif" alt="Fête !">
+        </div>
     </div>
 
     <script>
@@ -148,6 +152,8 @@
             "Contournement des pare-feux locaux...",
             "Ciblage de la victime : LAËTITIA...",
             "Scan biométrique : 41 ans détectés...",
+            "Recherche de statut : En couple avec...",
+            "<span class='error-text'>[ ERREUR SYSTEME ]</span>",
             "Analyse des dossiers compromettants...",
             "Téléchargement des photos dossiers : 100%",
             "ATTENTION : APPAREIL COMPROMIS !",
@@ -157,39 +163,35 @@
         const consoleDiv = document.getElementById("console");
         let msgIndex = 0;
 
-        // Fonction pour écrire le texte façon Hacker
         function typeMessage() {
             if (msgIndex < messages.length) {
                 const p = document.createElement("p");
-                p.textContent = "> " + messages[msgIndex];
+                p.innerHTML = "> " + messages[msgIndex];
                 consoleDiv.appendChild(p);
                 msgIndex++;
-                // Vitesse entre chaque ligne (plus rapide à la fin)
-                setTimeout(typeMessage, 800 + Math.random() * 800); 
+                
+                let delay = 800 + Math.random() * 800;
+                if (msgIndex === 6) delay = 2000; 
+
+                setTimeout(typeMessage, delay); 
             } else {
-                // Quand c'est fini, on affiche le bouton
                 document.getElementById("btn-rancon").style.display = "inline-block";
                 document.getElementById("cursor").style.display = "none";
             }
         }
 
-        // On lance le piratage après 1 seconde
         setTimeout(typeMessage, 1000);
 
-        // Fonction quand on clique sur le bouton "RANÇON"
         function montrerRancon() {
-            // Cacher l'écran de hack
             document.getElementById("hacker-screen").style.display = "none";
             
-            // Afficher l'écran d'anniversaire
             const birthdayScreen = document.getElementById("birthday-screen");
             birthdayScreen.classList.remove("hidden-at-start");
             birthdayScreen.style.display = "flex";
 
-            // Lancer "Freed from desire" de Gala via YouTube
-            // L'ajout de ?autoplay=1 fonctionne ici car la personne a cliqué sur le bouton juste avant
-            const playerDiv = document.getElementById("music-player");
-            playerDiv.innerHTML = '<iframe src="https://www.youtube.com/embed/p3l7fgvrEKM?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+            // Lancer la musique locale sans pub !
+            const audio = document.getElementById("audio-player");
+            audio.play();
         }
     </script>
 </body>
