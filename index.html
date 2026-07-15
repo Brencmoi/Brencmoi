@@ -3,21 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon super site GitHub</title>
+    <title>Terminal_Hacker.exe</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f4f4f9;
+            background-color: black;
+            color: #00FF00;
+            font-family: "Courier New", Courier, monospace;
+            padding: 20px;
+            font-size: 1.2rem;
+            overflow: hidden;
         }
-        h1 {
-            color: #333;
+        .cursor {
+            animation: blink 1s infinite;
+            font-weight: bold;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <h1>Bonjour le monde ! 👋</h1>
-    <p>Ceci est mon premier site hébergé sur GitHub Pages.</p>
+    <div id="console"></div>
+    <span class="cursor">_</span>
+
+    <script>
+        const messages = [
+            "Initialisation du script de piratage...",
+            "Contournement du pare-feu principal...",
+            "Accès au système sécurisé...",
+            "Analyse des données en cours...",
+            "ATTENTION : Détection d'une activité anormale...",
+            "Téléchargement des recettes secrètes de grand-mère...",
+            "Piratage de la machine à café terminé à 100% ☕",
+            "Mission accomplie. Vous avez été hacké ! 😎"
+        ];
+
+        const consoleDiv = document.getElementById("console");
+        let msgIndex = 0;
+
+        function typeMessage() {
+            if (msgIndex < messages.length) {
+                const p = document.createElement("p");
+                p.textContent = "> " + messages[msgIndex];
+                consoleDiv.appendChild(p);
+                msgIndex++;
+                setTimeout(typeMessage, 1500 + Math.random() * 1000); // Temps aléatoire entre chaque ligne pour faire plus "vrai"
+            }
+        }
+
+        setTimeout(typeMessage, 1000);
+    </script>
 </body>
 </html>
