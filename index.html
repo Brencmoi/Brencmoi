@@ -40,12 +40,16 @@
             color: red;
             font-weight: bold;
         }
+        .device-text {
+            color: #00FFFF; /* Cyan pour faire ressortir le modèle du téléphone */
+            font-weight: bold;
+        }
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
 
-        /* Le bouton de rançon (caché au début) */
+        /* Le bouton de rançon */
         #btn-rancon {
             display: none;
             margin-top: 30px;
@@ -125,7 +129,7 @@
         </center>
     </div>
 
-    <!-- Écran d'anniversaire (Caché au départ) -->
+    <!-- Écran d'anniversaire -->
     <div id="birthday-screen" class="hidden-at-start">
         <h1>Bonne znniverssaire Laëtitia !!!</h1>
         <h2>41 ANS !</h2>
@@ -136,20 +140,38 @@
             <strong>1 énorme part de gâteau et faire la fête jusqu'au bout de la nuit !</strong> 🥳🥂
         </div>
 
-        <!-- Lecteur audio caché pointant vers le fichier sur ton GitHub -->
         <audio id="audio-player" src="musique.mp3" loop></audio>
 
-        <!-- Un GIF de fête pour remplacer la vidéo YouTube -->
         <div class="gif-container">
             <img src="https://media.giphy.com/media/3o7TKMt1VVNkHV2PaE/giphy.gif" alt="Fête !">
         </div>
     </div>
 
     <script>
-        // Textes du piratage
+        // --- 1. DÉTECTION DU TÉLÉPHONE / APPAREIL ---
+        let appareil = "Appareil non identifié";
+        const ua = navigator.userAgent;
+        
+        if (/iPhone/i.test(ua)) {
+            appareil = "Apple iPhone";
+        } else if (/iPad/i.test(ua)) {
+            appareil = "Apple iPad";
+        } else if (/Android/i.test(ua)) {
+            // Tente de récupérer le modèle exact du téléphone Android s'il est dispo
+            const match = ua.match(/Android.*?; (.*?) Build/i) || ua.match(/Android.*?; (.*?)\)/i);
+            appareil = match ? match[1] + " (Android)" : "Smartphone Android";
+        } else if (/Windows NT/i.test(ua)) {
+            appareil = "Ordinateur Windows";
+        } else if (/Macintosh/i.test(ua)) {
+            appareil = "Apple Mac";
+        }
+
+        // --- 2. TEXTES DU PIRATAGE ---
         const messages = [
             "Lancement du protocole d'intrusion...",
             "Contournement des pare-feux locaux...",
+            "Analyse de la connexion réseau...",
+            "Appareil détecté : <span class='device-text'>" + appareil + "</span>...",
             "Ciblage de la victime : LAËTITIA...",
             "Scan biométrique : 41 ans détectés...",
             "Recherche de statut : En couple avec...",
@@ -170,8 +192,10 @@
                 consoleDiv.appendChild(p);
                 msgIndex++;
                 
+                // Timing : pause plus longue sur l'appareil et sur l'erreur
                 let delay = 800 + Math.random() * 800;
-                if (msgIndex === 6) delay = 2000; 
+                if (msgIndex === 4) delay = 1500; // Pause après avoir affiché l'appareil
+                if (msgIndex === 8) delay = 2000; // Pause après l'erreur système
 
                 setTimeout(typeMessage, delay); 
             } else {
@@ -189,7 +213,6 @@
             birthdayScreen.classList.remove("hidden-at-start");
             birthdayScreen.style.display = "flex";
 
-            // Lancer la musique locale sans pub !
             const audio = document.getElementById("audio-player");
             audio.play();
         }
